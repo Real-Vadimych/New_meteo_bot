@@ -1,0 +1,9 @@
+python-dotenv
+aiogram
+requests
+beautifulsoup4
+setuptools
+selenium
+lxml
+discord.py
+fake-useragent
