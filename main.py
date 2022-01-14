@@ -10,4 +10,4 @@ def get_weather(req_type: str, airport: str) -> str:
 
 
 if __name__ == "__main__":
-    print(get_weather("TAF", "USII"))
+    get_weather("TAF", "USII")
