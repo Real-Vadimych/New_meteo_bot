@@ -2,15 +2,16 @@ from aiogram import Dispatcher, executor, types, Bot
 from main import get_weather
 import aiogram.utils.markdown as fmt
 import os
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
-load_dotenv()
+#load_dotenv()
 
-token = os.getenv("TELEGRAM_TOKEN") 
+token = os.getenv("TELEGRAM_TEST_TOKEN") 
 
 bot = Bot(token=token)
 
 dp = Dispatcher(bot)
+
 
 print('Telegram BOT connected')
 print('======================')

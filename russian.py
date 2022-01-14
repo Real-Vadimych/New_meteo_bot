@@ -2,7 +2,7 @@ import os
 import re
 import time
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 import settings
 from splitter import cutter
 
-load_dotenv()
+#load_dotenv()
 
 def set_driver():
     ua = UserAgent()
