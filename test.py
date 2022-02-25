@@ -1,10 +1,14 @@
-import os
+sex = 'female'
+Pclass = 3
+Fare = 7.56
+survived = 0
 
-from dotenv import load_dotenv
+if sex =='male':
+    survived=0
+elif sex == 'female' and Pclass == 3 and Fare > 20:
+    survived=0
+else:
+    survived=1
 
-load_dotenv()
+print(survived)
 
-
-
-token = os.getenv('TELEGRAM_TEST_TOKEN')
-print(token)
