@@ -3,6 +3,8 @@ from main import get_weather
 import aiogram.utils.markdown as fmt
 import os
 from dotenv import load_dotenv
+import requests
+
 
 load_dotenv()
 
@@ -52,6 +54,21 @@ async def taf(message: types.Message):
 async def fa(message: types.Message):
 	airport = message.get_args()
 	await message.answer(get_weather('FA', airport))
+
+
+@dp.message_handler(commands='charts')
+async def charts(message: types.Message):
+	chat_id = message.chat.id
+	urls = [
+    'https://www.aviationweather.gov/data/iffdp/2722.pdf',
+    'https://www.aviationweather.gov/data/iffdp/2723.pdf',
+    'https://www.aviationweather.gov/data/iffdp/2724.pdf',
+	'https://www.aviationweather.gov/data/iffdp/2103.pdf'
+	]
+	for url in urls:
+		response = requests.get(url)
+		if response.status_code == 200:
+			await bot.send_document(chat_id, document=url)
 		
 
 if __name__ == '__main__':
