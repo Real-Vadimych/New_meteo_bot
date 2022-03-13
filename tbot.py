@@ -1,9 +1,12 @@
+from distutils.command.build import build
 from aiogram import Dispatcher, executor, types, Bot
+from black import out
 from main import get_weather
 import aiogram.utils.markdown as fmt
-import os
+import os, shutil
 from dotenv import load_dotenv
 import requests
+from datetime import datetime
 
 
 load_dotenv()
@@ -58,18 +61,37 @@ async def fa(message: types.Message):
 
 @dp.message_handler(commands='charts')
 async def charts(message: types.Message):
-	chat_id = message.chat.id
-	urls = [
+    chat_id = message.chat.id
+    path = f'.\\data\{str(chat_id)}'
+    os.makedirs(path, exist_ok=True)
+    output_dir = path
+
+    urls = [
     'https://www.aviationweather.gov/data/iffdp/2722.pdf',
     'https://www.aviationweather.gov/data/iffdp/2723.pdf',
     'https://www.aviationweather.gov/data/iffdp/2724.pdf',
-	'https://www.aviationweather.gov/data/iffdp/2103.pdf'
-	]
-	for url in urls:
-		response = requests.get(url)
-		if response.status_code == 200:
-			await bot.send_document(chat_id, document=url)
-		
+    'https://www.aviationweather.gov/data/iffdp/2103.pdf'
+    ]
+    headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
+    for url in urls:
+    	with requests.Session() as s:
+    		response = s.get(url, headers=headers)
+    		if response.status_code == 200:
+    			file_path = os.path.join(output_dir, os.path.basename(url))
+    			with open(file_path, 'wb') as f:
+    				f.write(response.content)
+
+    for file in os.listdir(output_dir):
+    	file_path = os.path.join(output_dir, file)
+    	await bot.send_document(chat_id, document=open(file_path, 'rb'))
+
+    	try:
+    		if os.path.isfile(file_path) or os.path.islink(file_path):
+    			os.unlink(file_path)
+    		elif os.path.isdir(file_path):
+    			shutil.rmtree(file_path)
+    	except Exception as e:
+    		print('Failed to delete %s. Reason: %s' % (file_path, e))	
 
 if __name__ == '__main__':
     executor.start_polling(dp)
